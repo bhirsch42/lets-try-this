@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<center>
+	{% if error %}<div class="error">You must fill out all fields!</div>{% endif %}
+	<form method="POST">
+		<table cellpadding="5">
+			<tr>
+				<td class="left">Last Name</td>
+				<td><input type="text" name="last_name"></td>
+			</tr>
+			<tr>
+				<td class="left">First Name</td>
+				<td><input type="text" name="first_name"></td>
+			</tr>
+			<tr>
+			<td></td>
+			<td><input type="submit"></td>
+			</tr>
+		</table>
+	</form>
+</center>
+{% endblock content %}
