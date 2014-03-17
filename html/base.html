@@ -23,7 +23,14 @@
 				<li class="nav"><a class="nav" href="/schedule">Schedule</a></li>|
 				<li class="nav"><a class="nav" href="/bios">Bios</a></li>|
 				<li class="nav"><a class="nav" href="/contact">Contact</a></li>|
+				{% if user %}
+				<li class="nav"><a class="nav" href="/account">My Account</a></li>|
+				{% endif %}
+				{% if user %}
+				<li class="nav"><a class="nav" href="/logout">Logout</a></li>
+				{% else %}
 				<li class="nav"><a class="nav" href="/login">Login</a></li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>
@@ -37,10 +44,10 @@
 			</div>
 		</center>
 	</div>
-<!-- 	<div class="footer">
-		Ben Hirsch | 2013
+	<div class="footer-wrapper">
+		ohai
 	</div>
- -->
+
 </body>
 
 </html>

@@ -23,6 +23,12 @@ div.nav-wrapper {
 	width: 100%;
 }
 
+div.footer-wrapper {
+	background-color: black;
+	width: 100%;
+	min-height: 70px;
+}
+
 div.nav {
 	height: 100px;
 }
@@ -57,7 +63,9 @@ div.content {
 	left: 50%;
 	width: 800px;
 	margin-top: 50px;
+	margin-bottom: 50px;
 	text-align: left;
+	/*min-height: 400px;*/
 }
 
 img.home {
