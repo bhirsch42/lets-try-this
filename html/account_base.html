@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block nav %}
+
+<div class="sidebar-wrapper">
+	<div class="sidebar">
+		<ul class="sidebar">
+			<li class="sidebar"><a class="sidebar" href="/myaccount">Overview</a></li>
+			<li class="sidebar"><a class="sidebar" href="/myaccount/bio">Bio</a></li>
+			{% if user and user.is_a_moderator %}
+			<li class="sidebar"><a class="sidebar" href="/myaccount/moderator">Moderator</a></li>|
+			{% endif %}
+		</ul>
+	</div>
+</div>
+
+{% endblock nav %}

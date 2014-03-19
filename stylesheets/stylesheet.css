@@ -59,8 +59,12 @@ a.nav {
 	margin-left: 10px;
 }
 
+div.content-wrapper {
+	/*margin: 0 240px;*/
+}
+
 div.content {
-	left: 50%;
+	right: 50%;
 	width: 800px;
 	margin-top: 50px;
 	margin-bottom: 50px;
@@ -71,4 +75,35 @@ div.content {
 img.home {
 	margin: 15px;
 	border-radius: 15px;
+}
+
+div.sidebar-wrapper {
+	width: 200px;
+	min-height: 200px;
+	float: left;
+	background-color: #f1f1f1; /* probs temporary */
+}
+
+div.sidebar {
+	margin: 0;
+}
+
+ul.sidebar {
+	list-style-type: none;
+	margin: 0;
+	float: left;
+}
+
+li.sidebar {
+	text-decoration: none;
+	display: block;
+	margin: 0;
+}
+
+a.sidebar {
+	/*display: block;*/
+	margin-bottom: 10px;
+	width: 220px;
+	/*padding-left: 50px;*/
+	background-color: white;
 }

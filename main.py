@@ -63,10 +63,18 @@ class LogoutHandler(Handler):
 			self.redirect('/')
 		self.redirect(users.create_logout_url('/'))
 
+class MyAccountHandler(Handler):
+	def get(self):
+		user = self.get_user()
+		if not user:
+			self.redirect('/login')
+			return
+		self.render('my_account.html')
+
 class AdminHandler(Handler):
 	def get(self):
 		user = self.get_user()
-		if user.is_a_moderator
+		if user.is_a_moderator:
 			self.render('moderator.html', user=user)
 			return
 		self.render('permission_denied.html', user=user)
@@ -76,5 +84,6 @@ app = webapp2.WSGIApplication([
 	('/login', LoginHandler),
 	('/login/createaccount', CreateAccountHandler),
 	('/logout', LogoutHandler),
+	('/myaccount', MyAccountHandler),
 	('/admin', AdminHandler)
 ], debug=True)

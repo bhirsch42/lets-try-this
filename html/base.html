@@ -24,7 +24,7 @@
 				<li class="nav"><a class="nav" href="/bios">Bios</a></li>|
 				<li class="nav"><a class="nav" href="/contact">Contact</a></li>|
 				{% if user %}
-				<li class="nav"><a class="nav" href="/account">My Account</a></li>|
+				<li class="nav"><a class="nav" href="/myaccount">My Account</a></li>|
 				{% endif %}
 				{% if user %}
 				<li class="nav"><a class="nav" href="/logout">Logout</a></li>
@@ -35,7 +35,10 @@
 		</div>
 	</div>
 
-	<div class="content-border">
+	{% block nav %}
+	{% endblock nav %}
+
+	<div class="content-wrapper">
 		<center>
 			<div class="content">
 			{% block content %}
