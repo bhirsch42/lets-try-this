@@ -5,13 +5,25 @@
 <div class="sidebar-wrapper">
 	<div class="sidebar">
 		<ul class="sidebar">
-			<li class="sidebar"><a class="sidebar" href="/myaccount">Overview</a></li>
-			<li class="sidebar"><a class="sidebar" href="/myaccount/bio">Bio</a></li>
+			<li class="sidebar"><a class="sidebar{% if page == 'overview' %}-selected{% endif %}" href="/myaccount">Overview</a></li>
+			<li class="sidebar"><a class="sidebar{% if page == 'bio' %}-selected{% endif %}" href="/myaccount/bio">Edit Bio</a></li>
 			{% if user and user.is_a_moderator %}
-			<li class="sidebar"><a class="sidebar" href="/myaccount/moderator">Moderator</a></li>|
+			<li class="sidebar"><a class="sidebar{% if page == 'moderator' %}-selected{% endif %}" href="/myaccount/moderator">Moderator</a></li>
 			{% endif %}
 		</ul>
 	</div>
 </div>
 
 {% endblock nav %}
+
+{% block content_wrapper %}
+<div class="account-content-wrapper">
+	<center>
+		<div class="content">
+		{% block content %}
+			Hello, world!
+		{% endblock content %}
+		</div>
+	</center>
+</div>
+{% endblock content_wrapper %}

@@ -1,0 +1,23 @@
+{% extends "account_base.html" %}
+
+{% block content %}
+
+<form method="POST">
+	
+	Image URL (Upload a 200-by-160 pixel image to <a target="_blank" href="http://www.imgur.com">Imgur</a> and paste a link here)<br>
+	{% if not image_url_is_valid %}<span class="error">This is not a valid image URL.<br></span>{% endif %}
+	<input type="text" name="image_url" value="{% if new_image_url %}{{new_image_url}}{% else %}{{user.bio.image_url}}{% endif %}">
+	<br><br>
+	Image Preview<br>
+	<img src="{{user.bio.image_url}}" class="bio">
+	<br>
+	<br>
+	Bio<br>
+	{% if not description_is_valid %}<span class="error">This area may not be left blank.<br></span>{% endif %}
+	<textarea name="description" rows="10" cols="70">{{user.bio.description}}</textarea><br>
+	<br>
+	<input type="submit"><br>
+	{% if submission_successful %}<br><span class="success">Submission successful.</span>{% endif %}
+</form>
+
+{% endblock content %}

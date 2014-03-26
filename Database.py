@@ -14,22 +14,34 @@ class MyUser(ndb.Model):
 	last_name = ndb.StringProperty(required=True)
 	bio = ndb.StructuredProperty(Bio)
 	is_a_moderator = ndb.BooleanProperty(required=True)
+	has_a_bio = ndb.BooleanProperty(required=True)
 	can_create_news_posts = ndb.BooleanProperty(required=True)
 	can_edit_calendar = ndb.BooleanProperty(required=True)
 
 
-def addUser(gid, fname, lname):
+def add_user(gid, fname, lname):
 	# check if user already exists
 	if gid in memcache.get(users_key):
 		return False
-	my_user = MyUser(google_user_id=gid, first_name=fname, last_name=lname,
-		is_a_moderator=False, can_create_news_posts=False, can_edit_calendar=False)
+	bio = Bio(image_url='', description='')
+	my_user = MyUser(google_user_id=gid, first_name=fname, last_name=lname, bio=bio,
+		is_a_moderator=False, has_a_bio=False, can_create_news_posts=False, can_edit_calendar=False)
 	my_user.put()
 	# update memcache
 	my_users = memcache.get(users_key)
 	add_user_to_dict(my_user, my_users)
 	memcache.set(users_key, my_users)
 	return True
+
+def get_all_users(update=False):
+	my_users = memcache.get(users_key)
+
+	# update
+	if my_users is None or update:
+		update_user_memcache()
+		my_users = memcache.get(users_key)
+
+	return my_users
 
 def update_user_memcache():
 	registered_users = ndb.gql("SELECT * FROM MyUser")
@@ -45,15 +57,8 @@ def is_registered_user(user, update=False):
 	if not user:
 		return False
 
-	my_users = memcache.get(users_key)
-
-	# update
-	if my_users is None or update:
-		update_user_memcache()
-		my_users = memcache.get(users_key)
-
 	# check if user exists
-	user_exists = user.user_id() in my_users
+	user_exists = user.user_id() in get_all_users()
 	return user_exists
 
 def get_user_from_google_user(user):

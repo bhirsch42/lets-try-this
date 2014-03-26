@@ -17,6 +17,8 @@
 import webapp2
 from Handler import *
 import Database
+import urlparse
+import mimetypes
 
 class MainHandler(Handler):
 	def get(self):
@@ -53,7 +55,7 @@ class CreateAccountHandler(Handler):
 		elif first_name == '' or last_name == '':
 			self.render('create_user.html', user=self.get_user(), error=True)
 		else:
-			Database.addUser(user.user_id(), first_name, last_name)
+			Database.add_user(user.user_id(), first_name, last_name)
 			self.render('user_created.html', user=self.get_user())
 
 class LogoutHandler(Handler):
@@ -69,15 +71,90 @@ class MyAccountHandler(Handler):
 		if not user:
 			self.redirect('/login')
 			return
-		self.render('my_account.html')
+		self.render('my_account.html', page='overview', user=user)
 
 class AdminHandler(Handler):
 	def get(self):
 		user = self.get_user()
-		if user.is_a_moderator:
+		if user and user.is_a_moderator:
 			self.render('moderator.html', user=user)
 			return
 		self.render('permission_denied.html', user=user)
+
+class MyBioHandler(Handler):
+	def get(self):
+		user = self.get_user()
+		if user and user.has_a_bio:
+			self.render('my_bio.html', page='bio', user=user, image_url_is_valid=True, description_is_valid=True, submission_successful=False)
+			return
+		self.render('permission_denied.html', user=user)
+
+	def post(self):
+		user = self.get_user()
+		if user and user.has_a_bio:
+			image_url_is_valid = True
+			description_is_valid = True
+
+			description = self.request.get('description')
+			image_url = self.request.get('image_url')
+
+			# check if image is valid
+			maintype= mimetypes.guess_type(urlparse.urlparse(image_url).path)[0]
+			if maintype not in ('image/png', 'image/jpeg', 'image/gif'):
+				image_url_is_valid = False
+
+			# check if description is valid
+			description_is_valid = description != ''
+
+			if image_url_is_valid and description_is_valid:
+				bio = Database.Bio(description=description, image_url=image_url)
+				user.bio = bio
+				user.put()
+				Database.update_user_memcache()
+				self.render('my_bio.html', page='bio', user=user, image_url_is_valid=image_url_is_valid,
+					description_is_valid=description_is_valid, submission_successful=True)
+			else:
+				self.render('my_bio.html', page='bio', user=user, image_url_is_valid=image_url_is_valid,
+					description_is_valid=description_is_valid, submission_successful=False,
+					new_image_url=image_url)			
+
+		else:
+			self.render('permission_denied.html', user=user)
+
+class CalendarHandler(Handler):
+	def get(self):
+		self.render('calendar.html', user=self.get_user())
+
+class ContactHandler(Handler):
+	def get(self):
+		self.render('contact.html', user=self.get_user())
+
+class ModeratorHandler(Handler):
+	def get(self):
+		self.render('moderator.html', page='moderator', user=self.get_user(), users=Database.get_all_users())
+		users = Database.get_all_users()
+		logging.error(users)
+
+	def post(self):
+		selected_user_key = self.request.get('selected_user_key')
+		if selected_user_key:
+			selected_user = Database.get_all_users()[selected_user_key]
+			self.render('moderator.html', page='moderator', user=self.get_user(), users=Database.get_all_users(),
+				selected_user=selected_user)
+		else:
+			is_a_moderator = self.request.get("is_a_moderator", default_value="no")
+			has_a_bio = self.request.get("has_a_bio", default_value="no")
+			can_create_news_posts = self.request.get("can_create_news_posts", default_value="no")
+			can_edit_calendar = self.request.get("can_edit_calendar", default_value="no")
+
+			selected_user.is_a_moderator = is_a_moderator
+			selected_user.has_a_bio = has_a_bio
+			selected_user.can_create_news_posts = can_create_news_posts
+			selected_user.can_edit_calendar = can_edit_calendar
+			selected_user.put()
+			Database.update_user_memcache()
+			self.render('moderator.html', page='moderator', user=self.get_user(), users=Database.get_all_users(),
+				selected_user=selected_user, submission_successful="True")
 
 app = webapp2.WSGIApplication([
 	('/', MainHandler),
@@ -85,5 +162,9 @@ app = webapp2.WSGIApplication([
 	('/login/createaccount', CreateAccountHandler),
 	('/logout', LogoutHandler),
 	('/myaccount', MyAccountHandler),
-	('/admin', AdminHandler)
+	('/admin', AdminHandler),
+	('/myaccount/bio', MyBioHandler),
+	('/calendar', CalendarHandler),
+	('/contact', ContactHandler),
+	('/myaccount/moderator', ModeratorHandler)
 ], debug=True)

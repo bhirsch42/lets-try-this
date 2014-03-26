@@ -20,7 +20,7 @@
 				<!-- <li class="logo"><a class="logo" href="/"><img src="stylesheets/site_logo4.png" border="0"/></a></li> -->
 				<li class="nav"><a class="nav" href="/">Home</a></li>|
 				<li class="nav"><a class="nav" href="/news">News</a></li>|
-				<li class="nav"><a class="nav" href="/schedule">Schedule</a></li>|
+				<li class="nav"><a class="nav" href="/calendar">Schedule</a></li>|
 				<li class="nav"><a class="nav" href="/bios">Bios</a></li>|
 				<li class="nav"><a class="nav" href="/contact">Contact</a></li>|
 				{% if user %}
@@ -38,6 +38,7 @@
 	{% block nav %}
 	{% endblock nav %}
 
+	{% block content_wrapper %}
 	<div class="content-wrapper">
 		<center>
 			<div class="content">
@@ -47,6 +48,7 @@
 			</div>
 		</center>
 	</div>
+	{% endblock content_wrapper %}
 	<div class="footer-wrapper">
 		ohai
 	</div>

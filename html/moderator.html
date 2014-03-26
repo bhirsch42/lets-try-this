@@ -1,7 +1,33 @@
-{% extends "base.html" %}
+{% extends "account_base.html" %}
 
 {% block content %}
 
-Hello, moderator.
+<form method="POST">
+	
+User<br>
+<select {% if selected_user_key %}selected="{{users[selected_user_key].first_name}} {{users[selected_user_key].last_name}}"{% endif %} name="selected_user_key" onchange='this.form.submit()'>
+	<option></option>
+	{% for key in users %}
+	<option value="{{key}}">{{users[key].first_name}} {{users[key].last_name}}</option>
+	{% endfor %}
+</select>
+<noscript><input type="submit"></noscript>
+</form>
+
+{% if selected_user %}
+<form method="POST">
+<u>{{selected_user.first_name}} {{selected_user.last_name}}</u><br><br>
+<span name="selected_user"
+<input {% if selected_user.is_a_moderator %}checked{% endif %} type="checkbox" name="is_a_moderator" value="yes">Is a moderator<br><br>
+<input {% if selected_user.has_a_bio %}checked{% endif %} type="checkbox" name="has_a_bio" value="yes">Has a bio<br><br>
+<input {% if selected_user.can_create_news_posts %}checked{% endif %} type="checkbox" name="can_create_news_posts" value="yes">Can create news posts<br><br>
+<input {% if selected_user.can_edit_calendar %}checked{% endif %} type="checkbox" name="can_edit_calendar" value="yes">Can edit calendar<br><br>
+<input type="submit">
+</form>
+{% endif %}
+
+{% if submission_successful %}
+<span class="success">Submission successful.</span>
+{% endif %}
 
 {% endblock content %}

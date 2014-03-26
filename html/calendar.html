@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user and user.can_edit_calendar %}
+
+This calendar is editable.  Please do not remove events that you did not create.
+You are welcome to edit events to reflect changes (ex. claiming workshops).
+<br>
+<br>
+<iframe class="calendar" src="http://teamup.com/kse5d5499094fca84e/"></iframe>
+
+{% else %}
+
+This calendar is read-only.  If you think you should have permission to edit it, contact a moderator.
+<br>
+<br>
+<iframe class="calendar" src="http://teamup.com/ks7a7295c1a55174bd/"></iframe>
+
+{% endif %}
+
+{% endblock content %}
