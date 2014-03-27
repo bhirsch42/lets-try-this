@@ -24,6 +24,17 @@
 		</td>
 		<td>
 		<a href="http://dramatech.org">Dramatech</a>
-</table>
+</table><br>
+<br>
+<u>Moderators</u><br>
+{% for key in users %}
+
+{% if users[key].is_a_moderator %}
+
+{{users[key].first_name}} {{users[key].last_name}}<br>
+
+{% endif %}
+
+{% endfor %}
 
 {% endblock content %}

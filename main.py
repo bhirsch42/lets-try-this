@@ -127,7 +127,7 @@ class CalendarHandler(Handler):
 
 class ContactHandler(Handler):
 	def get(self):
-		self.render('contact.html', user=self.get_user())
+		self.render('contact.html', user=self.get_user(), users=Database.get_all_users())
 
 class ModeratorHandler(Handler):
 	def get(self):
@@ -137,15 +137,15 @@ class ModeratorHandler(Handler):
 
 	def post(self):
 		selected_user_key = self.request.get('selected_user_key')
-		if selected_user_key:
-			selected_user = Database.get_all_users()[selected_user_key]
+		selected_user = Database.get_all_users()[selected_user_key]
+		if not self.request.POST.get('update_user', None):
 			self.render('moderator.html', page='moderator', user=self.get_user(), users=Database.get_all_users(),
-				selected_user=selected_user)
+				selected_user=selected_user, selected_user_key=selected_user_key)
 		else:
-			is_a_moderator = self.request.get("is_a_moderator", default_value="no")
-			has_a_bio = self.request.get("has_a_bio", default_value="no")
-			can_create_news_posts = self.request.get("can_create_news_posts", default_value="no")
-			can_edit_calendar = self.request.get("can_edit_calendar", default_value="no")
+			is_a_moderator = bool(self.request.get("is_a_moderator", default_value=''))
+			has_a_bio = bool(self.request.get("has_a_bio", default_value=''))
+			can_create_news_posts = bool(self.request.get("can_create_news_posts", default_value=''))
+			can_edit_calendar = bool(self.request.get("can_edit_calendar", default_value=''))
 
 			selected_user.is_a_moderator = is_a_moderator
 			selected_user.has_a_bio = has_a_bio
@@ -154,7 +154,11 @@ class ModeratorHandler(Handler):
 			selected_user.put()
 			Database.update_user_memcache()
 			self.render('moderator.html', page='moderator', user=self.get_user(), users=Database.get_all_users(),
-				selected_user=selected_user, submission_successful="True")
+				selected_user=selected_user, selected_user_key=selected_user_key, submission_successful="True")
+
+class BioHandler(Handler):
+	def get(self):
+		self.render('bio.html', user=self.get_user(), users=Database.get_all_users())
 
 app = webapp2.WSGIApplication([
 	('/', MainHandler),
@@ -166,5 +170,6 @@ app = webapp2.WSGIApplication([
 	('/myaccount/bio', MyBioHandler),
 	('/calendar', CalendarHandler),
 	('/contact', ContactHandler),
-	('/myaccount/moderator', ModeratorHandler)
+	('/myaccount/moderator', ModeratorHandler),
+	('/bios', BioHandler)
 ], debug=True)

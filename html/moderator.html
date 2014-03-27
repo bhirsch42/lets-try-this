@@ -6,23 +6,22 @@
 	
 User<br>
 <select {% if selected_user_key %}selected="{{users[selected_user_key].first_name}} {{users[selected_user_key].last_name}}"{% endif %} name="selected_user_key" onchange='this.form.submit()'>
-	<option></option>
 	{% for key in users %}
-	<option value="{{key}}">{{users[key].first_name}} {{users[key].last_name}}</option>
+	{% if key != user.google_user_id %}
+	<option {% if selected_user_key == key %}selected{% endif %} value="{{key}}">{{users[key].first_name}} {{users[key].last_name}}</option>
+	{% endif %}
 	{% endfor %}
 </select>
 <noscript><input type="submit"></noscript>
-</form>
 
 {% if selected_user %}
-<form method="POST">
+<input type="hidden" name="updating_user" value="True"><br><br>
 <u>{{selected_user.first_name}} {{selected_user.last_name}}</u><br><br>
-<span name="selected_user"
 <input {% if selected_user.is_a_moderator %}checked{% endif %} type="checkbox" name="is_a_moderator" value="yes">Is a moderator<br><br>
 <input {% if selected_user.has_a_bio %}checked{% endif %} type="checkbox" name="has_a_bio" value="yes">Has a bio<br><br>
 <input {% if selected_user.can_create_news_posts %}checked{% endif %} type="checkbox" name="can_create_news_posts" value="yes">Can create news posts<br><br>
 <input {% if selected_user.can_edit_calendar %}checked{% endif %} type="checkbox" name="can_edit_calendar" value="yes">Can edit calendar<br><br>
-<input type="submit">
+<input type="submit" name="update_user">
 </form>
 {% endif %}
 
