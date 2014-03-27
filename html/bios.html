@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for key in users %}
+
+{% if users[key].has_a_bio and users[key].bio.image_url != "" and users[key].bio.description != "" %}
+<div class="bio">
+<table>
+	<tr>
+		<td>
+			<img src="{{users[key].bio.image_url}}" class="bio">
+		</td>
+		<td>
+			{{users[key].bio.description}}
+		</td>
+	</tr>
+</table>
+</div>
+{% endif %}
+
+{% endfor %}
+
+{% endblock content %}

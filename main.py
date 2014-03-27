@@ -158,7 +158,7 @@ class ModeratorHandler(Handler):
 
 class BioHandler(Handler):
 	def get(self):
-		self.render('bio.html', user=self.get_user(), users=Database.get_all_users())
+		self.render('bios.html', user=self.get_user(), users=Database.get_all_users())
 
 app = webapp2.WSGIApplication([
 	('/', MainHandler),
